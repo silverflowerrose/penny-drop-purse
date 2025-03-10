@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Penny Drop Game</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+        #game-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin: 20px auto;
+            border: 2px solid #333;
+            border-radius: 10px;
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .penny {
+            width: 80px;
+            height: 80px;
+            display: inline-block;
+            margin: 10px;
+            cursor: grab;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            transition: transform 0.2s;
+        }
+        .penny:hover {
+            transform: scale(1.1);
+        }
+        .penny:active {
+            cursor: grabbing;
+        }
+        #wallet {
+            width: 500px;
+            height: 200px;
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-image: url('https://i.imgur.com/hrWsdwu.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        #score {
+            font-size: 24px;
+            margin-top: 20px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h1>Drop the pennies into the coin purse!</h1>
+    <div id="game-container">
+        <div id="wallet" 
+             ondrop="drop(event)" 
+             ondragover="allowDrop(event)">
+        </div>
+    </div>
+    <div>
+        <div id="penny1" class="penny" draggable="true" ondragstart="drag(event)" 
+             style="background-image: url('https://i.imgur.com/58x04Ub.png');">
+        </div>
+        <div id="penny2" class="penny" draggable="true" ondragstart="drag(event)"
+             style="background-image: url('https://i.imgur.com/58x04Ub.png');">
+        </div>
+        <div id="penny3" class="penny" draggable="true" ondragstart="drag(event)"
+             style="background-image: url('https://i.imgur.com/58x04Ub.png');">
+        </div>
+        <div id="penny4" class="penny" draggable="true" ondragstart="drag(event)"
+             style="background-image: url('https://i.imgur.com/58x04Ub.png');">
+        </div>
+        <div id="penny5" class="penny" draggable="true" ondragstart="drag(event)"
+             style="background-image: url('https://i.imgur.com/58x04Ub.png');">
+    </div>
+    
+    <div id="score">Total: $0.00</div>
+    
+    <script>
+        let total = 0;
+        const pennyValue = 0.01;
+
+        function allowDrop(event) {
+            event.preventDefault();
+        }
+
+        function drag(event) {
+            event.dataTransfer.setData("text", event.target.id);
+        }
+
+        function drop(event) {
+            event.preventDefault();
+            let pennyId = event.dataTransfer.getData("text");
+            let penny = document.getElementById(pennyId);
+            if (penny) {
+                penny.style.opacity = '0';
+                setTimeout(() => penny.remove(), 300);
+                total += pennyValue;
+                updateScore();
+                playDropSound();
+            }
+        }
+
+        function updateScore() {
+            document.getElementById("score").textContent = `Total: $${total.toFixed(2)}`;
+        }
+
+        function playDropSound() {
+            const audio = new Audio('https://raw.githubusercontent.com/silverflowerrose/coindropfile/main/coin-drop-82392.mp3');
+            audio.play();
+        }
+    </script>
+</body>
+</html>
